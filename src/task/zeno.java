@@ -1,10 +1,11 @@
-package doanchung3;
+package task;
+
 import java.io.*;
 import java.util.Scanner;
-public class zenzo {
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+public class zeno {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
         System.out.print("Nhập đường dẫn tới file cần đọc: ");
         String path = sc.nextLine();
@@ -26,7 +27,5 @@ public class zenzo {
         System.out.println("File: " + path);
         System.out.println("Message: " + message);
         System.out.println("Thời gian: " + java.time.LocalDateTime.now());
-
-	}
-
+    }
 }

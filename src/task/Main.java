@@ -1,9 +1,11 @@
 package task;
 
+import java.util.*;
+import java.time.LocalDate;
+import java.io.*;
 
-
-
-public static void main(String[] args) {
+public class Main {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         TaskManager manager = new TaskManager();
         JobService jobService = new JobService();
@@ -19,12 +21,24 @@ public static void main(String[] args) {
             System.out.println("0. Thoát");
             System.out.print("Chọn: ");
 
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice;
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("⚠️ Vui lòng nhập số hợp lệ!");
+                continue;
+            }
 
             switch (choice) {
                 case 1 -> {
                     System.out.print("Nhập ID: ");
-                    int id = Integer.parseInt(scanner.nextLine());
+                    int id;
+                    try {
+                        id = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("⚠️ Vui lòng nhập ID là số hợp lệ!");
+                        continue;
+                    }
                     System.out.print("Tên công việc: ");
                     String name = scanner.nextLine();
                     System.out.print("Trạng thái: ");
@@ -34,7 +48,13 @@ public static void main(String[] args) {
                 }
                 case 2 -> {
                     System.out.print("Nhập ID cần xóa: ");
-                    int id = Integer.parseInt(scanner.nextLine());
+                    int id;
+                    try {
+                        id = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("⚠️ Vui lòng nhập ID là số hợp lệ!");
+                        continue;
+                    }
                     if (!manager.removeTask(id)) {
                         System.out.println("❌ Không tìm thấy công việc ID: " + id);
                     } else {
@@ -43,7 +63,13 @@ public static void main(String[] args) {
                 }
                 case 3 -> {
                     System.out.print("ID cần cập nhật: ");
-                    int id = Integer.parseInt(scanner.nextLine());
+                    int id;
+                    try {
+                        id = Integer.parseInt(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("⚠️ Vui lòng nhập ID là số hợp lệ!");
+                        continue;
+                    }
                     System.out.print("Tên mới: ");
                     String name = scanner.nextLine();
                     System.out.print("Trạng thái mới: ");
@@ -69,11 +95,19 @@ public static void main(String[] args) {
                     System.out.print("Nhập vị trí: ");
                     String location = scanner.nextLine();
                     System.out.print("Nhập lương tối thiểu: ");
-                    double minSalary = Double.parseDouble(scanner.nextLine());
+                    double minSalary;
+                    try {
+                        minSalary = Double.parseDouble(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("⚠️ Vui lòng nhập lương là số hợp lệ!");
+                        continue;
+                    }
                     List<Job> jobs = jobService.filterByLocationAndSalary(location, minSalary);
                     jobs.forEach(System.out::println);
                 }
-                case 7 -> readFileAndCommit(scanner);
+                case 7 -> {
+                    readFileAndCommit(scanner); // Thêm {} để thống nhất cú pháp
+                }
                 case 0 -> {
                     System.out.println("👋 Thoát chương trình.");
                     scanner.close();
@@ -83,3 +117,27 @@ public static void main(String[] args) {
             }
         }
     }
+
+    public static void readFileAndCommit(Scanner scanner) {
+        System.out.print("Nhập đường dẫn tới file cần đọc: ");
+        String path = scanner.nextLine();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            String line;
+            System.out.println("\n--- Nội dung file ---");
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Không thể đọc file: " + e.getMessage());
+        }
+
+        System.out.print("\nNhập commit message: ");
+        String message = scanner.nextLine();
+
+        System.out.println("\n✅ COMMIT THÀNH CÔNG");
+        System.out.println("File: " + path);
+        System.out.println("Message: " + message);
+        System.out.println("Thời gian: " + java.time.LocalDateTime.now());
+    }
+}
